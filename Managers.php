@@ -49,8 +49,8 @@ $stmt->close();
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top left, #000, #0f0f0f 50%, #1a1a1a 100%);
-      color: #fff;
+      background: #ffffff;
+      color:rgb(39, 38, 38);
       min-height: 100vh;
       display: flex;
     }
@@ -64,7 +64,7 @@ $stmt->close();
     /* Sidebar */
     .sidebar {
       width: 250px;
-      background-color: #111;
+      background-color: #000d30;
       min-height: 100vh;
       padding: 1rem 0;
     }
@@ -234,36 +234,9 @@ $stmt->close();
       <h2 class="mb-4">Manager Panel</h2>
       
       
-      <!-- Tarjetas con estadísticas -->
       
-     <div class="abifront1">
-  <div class="row g-2 mb-2 d-flex justify-content-center">
-    <div class="col-auto">
-      <div class="card abifront2">
-        <div class="card-body">
-          <h5 class="abifront3">Requests of the Day</h5>
-          
-        </div>
-      </div>
-    </div>
-    <div class="col-auto">
-      <div class="card abifront2">
-        <div class="card-body">
-          <h5 class="abifront3">Requests of the Week</h5>
-          
-        </div>
-      </div>
-    </div>
-    <div class="col-auto">
-      <div class="card abifront2">
-        <div class="card-body">
-          <h5 class="abifront3">Requests of the Month</h5>
-          
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+      
+  
 
 
 

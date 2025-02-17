@@ -81,8 +81,8 @@ $stats = $stats_result->fetch_assoc();
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top left, #000, #0f0f0f 50%, #1a1a1a 100%);
-      color: #fff;
+      background: #ffffff;
+      color:rgb(39, 38, 38);
       min-height: 100vh;
       display: flex;
     }
@@ -96,7 +96,7 @@ $stats = $stats_result->fetch_assoc();
     /* Sidebar */
     .sidebar {
       width: 250px;
-      background-color: #111;
+      background-color: #000d30;
       min-height: 100vh;
       padding: 1rem 0;
     }
@@ -116,8 +116,8 @@ $stats = $stats_result->fetch_assoc();
       text-decoration: none;
     }
     .sidebar a:hover, .sidebar .active {
-      background-color: #222;
-      color: #fff;
+      background-color: #ffffff;
+      color: #000d30;;
     }
     .sidebar hr {
       border-color: #333;
@@ -142,19 +142,45 @@ $stats = $stats_result->fetch_assoc();
       content: "";
       position: absolute;
       inset: 0;
-      border: 1px solid rgba(26, 188, 156, 0.3);
-      border-radius: 6px;
-      pointer-events: none;
-      box-shadow: 0 0 20px rgba(26, 188, 156, 0.5);
+      
     }
+    
 
-    /* Tabla oscura */
-    .table-dark.table-striped > tbody > tr:nth-of-type(odd) > * {
-      background-color: #2a2a2a;
-    }
-    .table-dark.table-striped > tbody > tr:nth-of-type(even) > * {
-      background-color: #242424;
-    }
+    .card-body {
+  background: #000d30;
+    color:rgb(247, 248, 253);
+}
+.table-responsive {
+  border-radius: 15px;
+  overflow: hidden; /* Evitar que las celdas sobresalgan */
+}
+/* Aplicar bordes redondeados a la tabla */
+.rounded-table {
+    border-radius: 12px; /* Bordes redondeados */
+    border-collapse: separate !important; /* Necesario para que border-radius funcione */
+    border-spacing: 0; /* Asegura que no haya espacios entre las celdas */
+    overflow: hidden;
+}
+
+/* Bordes redondeados en las esquinas superiores */
+.rounded-table thead tr:first-child th {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Bordes redondeados en las esquinas inferiores */
+.rounded-table tbody tr:last-child td {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Asegurar que la tabla no sobresalga */
+.table-responsive {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgb(215, 219, 223); /* Agrega un borde sutil */
+}
+
 
     .profile-container {
       display: flex;

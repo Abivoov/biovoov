@@ -49,8 +49,8 @@ $stmt->close();
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top left, #000, #0f0f0f 50%, #1a1a1a 100%);
-      color: #fff;
+      background: #ffffff;
+      color:rgb(39, 38, 38);
       min-height: 100vh;
       display: flex;
     }
@@ -64,7 +64,7 @@ $stmt->close();
     /* Sidebar */
     .sidebar {
       width: 250px;
-      background-color: #111;
+      background-color: #000d30;
       min-height: 100vh;
       padding: 1rem 0;
     }
@@ -108,22 +108,15 @@ $stmt->close();
       overflow: hidden;
       color: #fff;
     }
-    .card-futuristic::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(22, 178, 213, 0.5);
-      border-radius: 6px;
-      pointer-events: none;
-      box-shadow: 0 0 20px rgba(26, 188, 156, 0.5);
-    }
+   
 
     /* Tabla oscura */
-    .table-dark.table-striped > tbody > tr:nth-of-type(odd) > * {
-      background-color: #2a2a2a;
+    .table-light.table-striped.table-striped > tbody > tr:nth-of-type(odd) > * {
+      background-color: #000d30;
     }
-    .table-dark.table-striped > tbody > tr:nth-of-type(even) > * {
-      background-color: #242424;
+    .table-light.table-striped.table-striped.table-striped > tbody > tr:nth-of-type(even) > * {
+      background-color: #000d30;
+      color: #ffffff;
     }
     .profile-container {
   text-align: center;
@@ -151,47 +144,41 @@ $stmt->close();
   margin-bottom: 10px;
   text-align: center;
 }
-/* Contenedor principal de las tarjetas */
-/* Contenedor principal de las tarjetas */
-.abifront1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
+.card-body {
+  background: #ffffff;
+    color: #000d30;
+}
+.table-responsive {
+  border-radius: 15px;
+  overflow: hidden; /* Evitar que las celdas sobresalgan */
+}
+/* Aplicar bordes redondeados a la tabla */
+.rounded-table {
+    border-radius: 12px; /* Bordes redondeados */
+    border-collapse: separate !important; /* Necesario para que border-radius funcione */
+    border-spacing: 0; /* Asegura que no haya espacios entre las celdas */
+    overflow: hidden;
 }
 
-/* Tarjetas pequeñas con diseño separado */
-.abifront2 {
-  background-color: #1a1a1a;
-  border: 1px solid rgba(26, 188, 156, 0.3);
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
-  padding: 10px;
-  text-align: center;
-  color: #fff;
-  min-width: 200px;
-  max-width: 280px;
-  height: 90px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* Bordes redondeados en las esquinas superiores */
+.rounded-table thead tr:first-child th {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
-/* Títulos dentro de las tarjetas */
-.abifront3 {
-  font-size: 0.9rem;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #1ac6ff;
+/* Bordes redondeados en las esquinas inferiores */
+.rounded-table tbody tr:last-child td {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
-/* Números dentro de las tarjetas */
-.abifront2 p {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin: 0;
-  color: #ffffff;
+/* Asegurar que la tabla no sobresalga */
+.table-responsive {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgb(215, 219, 223); /* Agrega un borde sutil */
 }
+
 
 
 
@@ -217,7 +204,7 @@ $stmt->close();
 </div>
 
       <a href="#" class="active"><i class="bi bi-card-list me-2"></i> My Requests</a>
-      <button class="btn btn-primary w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
+      <button class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
         <i class="bi bi-file-earmark-plus me-2"></i> New Requests
       </button>
       <hr />
@@ -243,7 +230,7 @@ $stmt->close();
         <div class="card-body">
           <h5 class="card-title mb-3">My Requests</h5>
           <div class="table-responsive">
-    <table class="table table-dark table-striped align-middle">
+    <table class="table table-light table-striped align-middle">
         <thead>
             <tr>
                 <th>ID</th>
