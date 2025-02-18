@@ -50,10 +50,63 @@ $stmt->close();
       margin: 0;
       padding: 0;
       background: #ffffff;
-      color:rgb(39, 38, 38);
+      color: #000d30;
       min-height: 100vh;
       display: flex;
     }
+    /* Contenedor de la tabla */
+.container {
+    max-width: 90%;
+    margin: auto;
+}
+
+/* Estilos personalizados para la tabla */
+.custom-table {
+    background-color: #000d30 !important; /* Color de fondo */
+    border-radius: 12px; /* Bordes redondeados */
+    overflow: hidden; /* Asegura que las esquinas se mantengan redondeadas */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Efecto de sombra */
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Encabezados */
+.custom-table thead {
+    background-color: #000d30 !important;
+}
+
+.custom-table thead th {
+  background-color: #000d30 !important;
+    color: #ffffff !important;
+    text-align: center;
+    padding: 12px;
+}
+
+/* Celdas del cuerpo */
+.custom-table tbody tr td {
+    background-color: #000d30 !important;
+    color:rgb(241, 235, 235) !important;
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #444 !important;
+}
+
+/* Bordes redondeados en esquinas superiores */
+.custom-table thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+.custom-table thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Bordes redondeados en esquinas inferiores */
+.custom-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+.custom-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
 
     /* Contenedor principal */
     .container-main {
@@ -100,32 +153,7 @@ $stmt->close();
       padding: 2rem;
     }
 
-    /* Tarjetas futuristas */
-    .card-futuristic {
-      background-color: #1a1a1a;
-      border: none;
-      position: relative;
-      overflow: hidden;
-      color: #fff;
-    }
-    .card-futuristic::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(22, 178, 213, 0.5);
-      border-radius: 6px;
-      pointer-events: none;
-      box-shadow: 0 0 20px rgba(26, 188, 156, 0.5);
-    }
-
-    /* Tabla oscura */
-    .table-dark.table-striped > tbody > tr:nth-of-type(odd) > * {
-      background-color: #2a2a2a;
-    }
-    .table-dark.table-striped > tbody > tr:nth-of-type(even) > * {
-      background-color: #242424;
-    }
-    .profile-container {
+  .profile-container {
   text-align: center;
   padding: 15px;
   display: flex;
@@ -151,53 +179,11 @@ $stmt->close();
   margin-bottom: 10px;
   text-align: center;
 }
-/* Contenedor principal de las tarjetas */
-/* Contenedor principal de las tarjetas */
-.abifront1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-}
 
-/* Tarjetas pequeñas con diseño separado */
-.abifront2 {
-  background-color: #1a1a1a;
-  border: 1px solid rgba(26, 188, 156, 0.3);
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
-  padding: 10px;
-  text-align: center;
-  color: #fff;
-  min-width: 200px;
-  max-width: 280px;
-  height: 90px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Títulos dentro de las tarjetas */
-.abifront3 {
-  font-size: 0.9rem;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #1ac6ff;
-}
-
-/* Números dentro de las tarjetas */
-.abifront2 p {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin: 0;
-  color: #ffffff;
-}
-
-
-
-  </style>
+</style>
 </head>
 <body>
+
   <div class="container-main">
     <!-- SIDEBAR -->
     <div class="sidebar">
@@ -217,7 +203,7 @@ $stmt->close();
 </div>
 
       <a href="My_request_Managers.php"class="active"><i class="bi bi-card-list me-2"></i> My Requests</a>
-      <button class="btn btn-primary w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
+      <button class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
         <i class="bi bi-file-earmark-plus me-2"></i> New Requests
       </button>
       <hr />
@@ -231,17 +217,28 @@ $stmt->close();
 
     <!-- CONTENIDO PRINCIPAL -->
     <div class="main-content">
-      <h2 class="mb-4">Manager Panel</h2>
-      
-      
-      
-      
-  
-
-
-
-      
-
+      <h4 class="mb-4">Manager Panel</h4>
+      <div class="container mt-4">
+    <h4>Completed Requests</h4>
+    <table class="table table-striped custom-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Candidate</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Response</th>
+                <th>Updated</th>
+                <th>Actions</th> <!-- Nueva columna -->
+            </tr>
+        </thead>
+        <tbody id="tablaSolicitudesFinalizadas">
+            <tr>
+                <td colspan="7" class="text-center">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
   <!-- MODAL PARA NUEVA SOLICITUD -->
   <div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -299,6 +296,32 @@ $stmt->close();
     </div>
   </div>
 
+  <!-- MODAL PARA VER DETALLES -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Request Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <table class="table table-bordered">
+    <tr><th>ID:</th><td id="detalle-id"></td></tr>
+    <tr><th>Candidate:</th><td id="detalle-candidato"></td></tr>
+    <tr><th>Department:</th><td id="detalle-departamento"></td></tr>
+    <tr><th>Position:</th><td id="detalle-position"></td></tr>
+    <tr><th>Priority Level:</th><td id="detalle-prioridad"></td></tr>
+    <tr><th>Delivery Time:</th><td id="detalle-fecha"></td></tr>
+    <tr><th>Comments:</th><td id="detalle-comentarios"></td></tr>
+    <tr><th>Response:</th><td id="detalle-respuesta"></td></tr>
+</table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
   <script>
     document.getElementById("solicitudForm").addEventListener("submit", function(event) {
     event.preventDefault();
@@ -336,6 +359,45 @@ cargarSolicitudes();
     function triggerFileInput() {
         document.getElementById('profilePictureInput').click();
     }
+</script>
+<script>
+function verDetalles(id) {
+    fetch('obtener_solicitud.php?id=' + id)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received Data:", data); // Debugging: Check the received data
+            
+            if (data.error) {
+                alert("Error: " + data.error);
+                return;
+            }
+
+            document.getElementById("detalle-id").innerText = data.id || "N/A";
+            document.getElementById("detalle-candidato").innerText = data.candidate_name || "N/A";
+            document.getElementById("detalle-departamento").innerText = data.department || "N/A";
+            document.getElementById("detalle-position").innerText = data.position || "N/A";
+            document.getElementById("detalle-prioridad").innerText = data.nivel_prioridad || "N/A";
+            document.getElementById("detalle-fecha").innerText = data.delivery_time || "N/A";
+            document.getElementById("detalle-comentarios").innerText = data.comments || "No comments";
+            document.getElementById("detalle-respuesta").innerText = data.response_comments || "No response";
+        })
+        .catch(error => console.error("Error loading request details:", error));
+}
+</script>
+
+
+<script>
+function cargarSolicitudesFinalizadas() {
+    fetch('cargar_solicitudes_finalizadas.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("tablaSolicitudesFinalizadas").innerHTML = data;
+        })
+        .catch(error => console.error("Error loading completed requests:", error));
+}
+
+// Cargar solicitudes al cargar la página
+document.addEventListener("DOMContentLoaded", cargarSolicitudesFinalizadas);
 </script>
 
 </body>
