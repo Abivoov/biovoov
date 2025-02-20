@@ -209,7 +209,7 @@ $stmt->close();
       </button>
       <hr />
       <a href="Feedback.php">
-    <i class="bi bi-chat-left-text me-2"></i> Feedback
+    <i class="bi bi-chat-left-text me-2"></i> Feedbackhttp://localhost/public_html/Feedback.php
 </a>
 <hr />
 
@@ -225,7 +225,7 @@ $stmt->close();
 
 
 
-      <!-- Tabla de solicitudes -->
+      <!-- Tabla con todas las solicitudes -->
       <div class="card card-futuristic">
         <div class="card-body">
           <h5 class="card-title mb-3">My Requests</h5>

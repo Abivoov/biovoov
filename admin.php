@@ -147,8 +147,8 @@ $stats = $stats_result->fetch_assoc();
     
 
     .card-body {
-  background: #000d30;
-    color:rgb(247, 248, 253);
+  background:rgb(222, 221, 221);
+    color: #000d30;
 }
 .table-responsive {
   border-radius: 15px;
@@ -178,7 +178,7 @@ $stats = $stats_result->fetch_assoc();
 .table-responsive {
     border-radius: 15px;
     overflow: hidden;
-    border: 1px solid rgb(215, 219, 223); /* Agrega un borde sutil */
+    border: 1px solid rgb(185, 186, 187); /* Agrega un borde sutil */
 }
 
 
@@ -259,7 +259,8 @@ $stats = $stats_result->fetch_assoc();
         <div class="col-md-4">
           <div class="card card-futuristic h-100">
             <div class="card-body">
-              <h5 class="card-title">Pending</h5>
+              <h5 class="card-title"><i class="bi bi-bell"></i>
+              Pending</h5>
               <p class="fs-2"><?= $stats['pendientes'] ?></p>
             </div>
           </div>
@@ -267,7 +268,8 @@ $stats = $stats_result->fetch_assoc();
         <div class="col-md-4">
           <div class="card card-futuristic h-100">
             <div class="card-body">
-              <h5 class="card-title">In process</h5>
+              <h5 class="card-title"><i class="bi bi-arrow-repeat"></i>
+              In process</h5>
               <p class="fs-2"><?= $stats['en_proceso'] ?></p>
             </div>
           </div>
@@ -275,169 +277,163 @@ $stats = $stats_result->fetch_assoc();
         <div class="col-md-4">
           <div class="card card-futuristic h-100">
             <div class="card-body">
-              <h5 class="card-title">finished</h5>
+              <h5 class="card-title"><i class="bi bi-check-circle-fill text-success"></i>
+              finished</h5>
               <p class="fs-2"><?= $stats['finalizados'] ?></p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Tabla de solicitudes pendientes -->
-      <div class="card card-futuristic">
-        <div class="card-body">
-          <h5 class="card-title mb-3">Pending Requests</h5>
-          <div class="table-responsive">
-            <table class="table table-dark table-striped align-middle">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Applicant</th>
-                  <th>Candidate</th>
-                  <th>Status</th>
-                  <th>Date created</th>
-                  <th>Date to be delivered</th>
-                  <th>Priority Level</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-            <tbody>
-  <?php while ($row = $result->fetch_assoc()) { ?>
-    <tr>
-    <td><?= $row['id']; ?></td>
-    <td><?= $row['solicitante']; ?></td>
-    <td><?= $row['candidate_name']; ?></td>
-    <td>
-        <span class="badge bg-warning text-dark"><?= $row['estado']; ?></span>
-    </td>
-    <td><?= date("Y-m-d H:i:s", strtotime($row['fecha_creacion'])); ?></td> <!-- Fecha de creación -->
-    <td><?= date("Y-m-d H:i:s", strtotime($row['delivery_time'])); ?></td> <!-- Fecha de entrega -->
-    
-    <!-- Nueva columna de Nivel de Prioridad -->
-    <td>
-        <span class="badge 
-            <?= ($row['nivel_prioridad'] == 'Very high') ? 'bg-danger' : 
-                (($row['nivel_prioridad'] == 'High') ? 'bg-warning' : 'bg-success'); ?>">
-            <?= $row['nivel_prioridad']; ?>
-        </span>
-    </td>
-
-    <!-- Botón Reply -->
-    <td>
-        <button 
-            class="btn btn-sm btn-outline-light" 
-            data-bs-toggle="modal" 
-            data-bs-target="#respuestaModal" 
-            onclick="cargarDatos(<?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8') ?>)">
-            Reply
-        </button>
-    </td>
-</tr>
-
-  <?php } ?>
-</tbody>
-
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL PARA RESPONDER SOLICITUD -->
+      <div class="container mt-4">
+    <h2>Pending Requests</h2>
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Candidate</th>
+          <th>Status</th>
+          <th>Date Created</th>
+          <th>Delivery Time</th>
+          <th>Priority Level</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while ($row = $result->fetch_assoc()) { ?>
+          <tr>
+            <td><?= $row['id']; ?></td>
+            <td><?= $row['candidate_name']; ?></td>
+            <td><span class="badge bg-warning text-dark"><?= $row['estado']; ?></span></td>
+            <td><?= date("Y-m-d H:i:s", strtotime($row['fecha_creacion'])); ?></td>
+            <td><?= date("Y-m-d H:i:s", strtotime($row['delivery_time'])); ?></td>
+            <td>
+              <span class="badge 
+                <?= ($row['nivel_prioridad'] == 'Very high') ? 'bg-danger' : 
+                    (($row['nivel_prioridad'] == 'High') ? 'bg-warning' : 'bg-success'); ?>">
+                <?= $row['nivel_prioridad']; ?>
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-light btn-reply" 
+                data-bs-toggle="modal" 
+                data-bs-target="#respuestaModal" 
+                data-info='<?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>'>
+                Reply
+              </button>
+<!-- MODAL PARA RESPONDER SOLICITUD -->
   <div class="modal fade" id="respuestaModal" tabindex="-1" aria-labelledby="respuestaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content bg-dark text-white">
         <div class="modal-header">
-          <h5 class="modal-title" id="respuestaModalLabel">Details</h5>
+          <h5 class="modal-title">Edit Request</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <form id="respuestaForm" enctype="multipart/form-data">
+          <form id="updateForm">
             <input type="hidden" name="id" id="solicitudId">
-
-            <p><strong>Applicant:</strong> <span id="solicitanteNombre"></span></p>
-            <p><strong>Candidate:</strong> <span id="candidateNombre"></span></p>
-            <p><strong>Status:</strong> <span id="estadoActual"></span></p>
-            <p><strong>Feedback:</strong> <span id="comments"></span></p>
-            <p><strong>attachments:</strong> <span id="attachments"></span></p>
-
-            <hr>
-
+            
             <div class="mb-3">
-              <label for="estadoNuevo" class="form-label">Update Status</label>
+              <label class="form-label">Candidate Name</label>
+              <input type="text" class="form-control" name="candidate_name" id="candidateNombre">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Comments</label>
+              <textarea class="form-control" name="comments" id="comments"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Delivery Time</label>
+              <input type="datetime-local" class="form-control" name="delivery_time" id="deliveryTime">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Department</label>
+              <select class="form-select" name="department" id="department">
+                <option value="HR">HR</option>
+                <option value="IT">IT</option>
+                <option value="Finance">Finance</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Position</label>
+              <input type="text" class="form-control" name="position" id="position">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Status</label>
               <select class="form-select" name="estado" id="estadoNuevo">
                 <option value="Pendiente">Pending</option>
-                <option value="En proceso">In process</option>
+                <option value="En proceso">In Process</option>
                 <option value="Finalizado">Finished</option>
               </select>
             </div>
-
             <div class="mb-3">
-              <label class="form-label">Attach response</label>
-              <input type="file" class="form-control" name="response_attachment">
+              <label class="form-label">Priority Level</label>
+              <select class="form-select" name="nivel_prioridad" id="nivelPrioridad">
+                <option value="Normal">Normal</option>
+                <option value="High">High</option>
+                <option value="Very high">Very High</option>
+              </select>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Add comments</label>
-              <textarea class="form-control" name="response_comments" rows="3"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Save changes</button>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
           </form>
         </div>
       </div>
     </div>
+  </div>            </td>
+          </tr>
+        <?php } ?>
+      </tbody>
+    </table>
   </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
   <script>
-    function cargarDatos(data) {
-      // Llenamos los campos del modal con la información de la solicitud
-      document.getElementById('solicitudId').value = data.id;
-      document.getElementById('solicitanteNombre').innerText = data.solicitante;
-      document.getElementById('candidateNombre').innerText = data.candidate_name;
-      document.getElementById('estadoActual').innerText = data.estado;
-      document.getElementById('comments').innerText = data.comments || 'No comments';
-
-      // Mostrar archivos adjuntos si existen
-      let attachmentsHTML = 'There are no attachments';
-      if (data.attachments) {
-        const files = data.attachments.split(',');
-        if (files.length > 0 && files[0] !== '') {
-          attachmentsHTML = files.map(file => {
-            return `<a href="${file}" target="_blank" class="btn btn-outline-light btn-sm me-1 mb-1">Ver Archivo</a>`;
-          }).join('');
+    document.addEventListener("click", function(event) {
+        let button = event.target.closest(".btn-reply");
+        if (button) {
+            let data = JSON.parse(button.getAttribute("data-info"));
+            cargarDatos(data);
         }
-      }
-      document.getElementById('attachments').innerHTML = attachmentsHTML;
+    });
 
-      // Preseleccionar estado actual en el dropdown
-      document.getElementById('estadoNuevo').value = data.estado;
+    function cargarDatos(data) {
+        document.getElementById('solicitudId').value = data.id;
+        document.getElementById('candidateNombre').value = data.candidate_name;
+        document.getElementById('comments').value = data.comments || '';
+        document.getElementById('deliveryTime').value = data.delivery_time;
+        document.getElementById('department').value = data.department;
+        document.getElementById('position').value = data.position;
+        document.getElementById('estadoNuevo').value = data.estado;
+        document.getElementById('nivelPrioridad').value = data.nivel_prioridad;
     }
 
-    // Al enviar el formulario, se llama a update_solicitud.php
-    document.getElementById('respuestaForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
+    document.getElementById("updateForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
 
-      fetch('update_solicitud.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(data => {
-        alert(data);
-        // Cerrar el modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('respuestaModal'));
-        modal.hide();
-        // Recargar la página o la tabla
-        window.location.reload();
-      })
-      .catch(error => console.error('Error:', error));
+        fetch('update_request.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            let modal = bootstrap.Modal.getInstance(document.getElementById("respuestaModal"));
+            modal.hide();
+            location.reload(); // Recargar página
+        })
+        .catch(error => console.error("Error updating request:", error));
     });
   </script>
+
+  <!-- Bootstrap JS -->
+  <!-- Cargar Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Cargar Bootstrap JS (Bundle con Popper incluido) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
   <script>
     function triggerFileInput() {
         document.getElementById('profilePictureInput').click();

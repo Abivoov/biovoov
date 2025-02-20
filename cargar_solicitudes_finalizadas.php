@@ -1,7 +1,7 @@
 <?php
 require 'db.php'; // Conexión a la base de datos
 
-$sql = "SELECT id, candidate_name, department, position, response_comments, fecha_actualizacion 
+$sql = "SELECT id, candidate_name, department, position, response_comments, fecha_actualizacion, attachments
         FROM solicitudes WHERE estado = 'Finalizado' 
         ORDER BY fecha_actualizacion DESC";
 $result = $conn->query($sql);

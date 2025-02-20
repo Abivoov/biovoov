@@ -1,31 +1,27 @@
 <?php
-require 'db.php'; // Ensure DB connection is correct
-
-header('Content-Type: application/json'); // Ensure response is JSON
+require 'db.php'; // Conexión a la base de datos
 
 if (!isset($_GET['id'])) {
     echo json_encode(["error" => "Missing request ID"]);
     exit;
 }
 
-$id = intval($_GET['id']); // Sanitize input
-$sql = "SELECT * FROM solicitudes WHERE id = ?";
+$id = $_GET['id'];
+
+$sql = "SELECT id, candidate_name, department, position, nivel_prioridad, delivery_time, comments, response_comments, attachments 
+        FROM solicitudes WHERE id = ?";
 $stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    echo json_encode(["error" => "Database error: " . $conn->error]);
-    exit;
-}
-
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    echo json_encode($result->fetch_assoc()); // Return the request data
-} else {
+if ($result->num_rows === 0) {
     echo json_encode(["error" => "Request not found"]);
+    exit;
 }
+
+$data = $result->fetch_assoc();
+echo json_encode($data);
 
 $stmt->close();
 $conn->close();

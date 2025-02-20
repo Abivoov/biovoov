@@ -22,7 +22,38 @@ $_SESSION['user']['username'] = !empty($user_data['username']) ? $user_data['use
 $_SESSION['user']['profile_picture'] = !empty($user_data['profile_picture']) ? $user_data['profile_picture'] : 'uploads/default-avatar.png';
 
 $profile_picture = $_SESSION['user']['profile_picture'];
-$stmt->close();
+// **Conteo de solicitudes hechas hoy**
+$sql_today = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND DATE(fecha_creacion) = CURDATE()";
+$stmt_today = $conn->prepare($sql_today);
+$stmt_today->bind_param("i", $user_id);
+$stmt_today->execute();
+$result_today = $stmt_today->get_result();
+$row_today = $result_today->fetch_assoc();
+$total_today = $row_today['total'];
+$stmt_today->close();
+
+// **Conteo de solicitudes hechas esta semana**
+$sql_week = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND YEARWEEK(fecha_creacion, 1) = YEARWEEK(CURDATE(), 1)";
+$stmt_week = $conn->prepare($sql_week);
+$stmt_week->bind_param("i", $user_id);
+$stmt_week->execute();
+$result_week = $stmt_week->get_result();
+$row_week = $result_week->fetch_assoc();
+$total_week = $row_week['total'];
+$stmt_week->close();
+
+// **Conteo de solicitudes hechas este mes**
+$sql_month = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND MONTH(fecha_creacion) = MONTH(CURDATE()) AND YEAR(fecha_creacion) = YEAR(CURDATE())";
+$stmt_month = $conn->prepare($sql_month);
+$stmt_month->bind_param("i", $user_id);
+$stmt_month->execute();
+$result_month = $stmt_month->get_result();
+$row_month = $result_month->fetch_assoc();
+$total_month = $row_month['total'];
+$stmt_month->close();
+
+
+$conn->close();
 ?>
 
 
@@ -44,6 +75,8 @@ $stmt->close();
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
   />
   <link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
   <style>
     /* Fondo oscuro futurista */
     body {
@@ -84,8 +117,8 @@ $stmt->close();
 
 /* Celdas del cuerpo */
 .custom-table tbody tr td {
-    background-color: #000d30 !important;
-    color:rgb(241, 235, 235) !important;
+  background:rgb(241, 242, 244)!important; /* Color de fondo oscuro */
+    color: #000d30 !important;
     text-align: center;
     padding: 10px;
     border-bottom: 1px solid #444 !important;
@@ -154,17 +187,18 @@ $stmt->close();
     }
 
   .profile-container {
+  top: 20px; /* Ajusta la posición desde la parte superior */
   text-align: center;
   padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+    top: 0; /* La pega a la parte superior */
+    right: 0; /* La pega al lado derecho */
+    margin-top: 20px;
 }
 
 .profile-pic {
-  width: 50px;
-  height: 50px;
+  width: 43px;
+  height: 43px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid rgb(230, 235, 229); /* Verde neón */
@@ -173,12 +207,114 @@ $stmt->close();
 }
 
 .username {
-  color: #ccc;
+  color:rgb(106, 107, 109);
   font-weight: bold;
-  font-size: 14px;
+  font-size: 10px;
   margin-bottom: 10px;
   text-align: center;
 }
+/* Estilos para el modal */
+.custom-modal {
+    border-radius: 15px; /* Bordes redondeados */
+    overflow: hidden; /* Para que las esquinas redondeadas sean efectivas */
+    background:rgb(241, 242, 244); /* Color de fondo oscuro */
+    color: #ffffff; /* Texto en blanco */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+}
+
+/* Encabezado del modal */
+.custom-modal .modal-header {
+  background: #000d30;
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 12px 16px;
+}
+
+/* Botón de cierre */
+.custom-modal .btn-close {
+    filter: invert(1); /* Hace el botón de cierre blanco */
+}
+
+/* Cuerpo del modal */
+.custom-modal .modal-body {
+    padding: 20px;
+    background:rgb(240, 241, 245);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+/* Estilos para la tabla dentro del modal */
+.custom-table {
+  background:rgb(222, 229, 250);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.custom-table th {
+  background:rgb(240, 241, 245);
+    color: #000d30;
+    padding: 12px;
+    text-align: left;
+}
+
+.custom-table td {
+    background:rgb(248, 248, 250); /* Azul oscuro */
+    color: #ddd;
+    padding: 12px;
+}
+
+/* Estilos generales para las tarjetas */
+.conteo1, .conteo2, .conteo3 {
+    background-color: #17a2b8; /* Color de fondo */
+    border-radius: 8px; /* Bordes más pequeños */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px; /* Menos espacio interno */
+    width: 90%; /* Disminuir el ancho */
+    height: 100px; /* Altura reducida */
+    text-align: center;
+    margin: auto;
+}
+/* Colores personalizados para cada tarjeta */
+.conteo1 {
+    background: linear-gradient(135deg, #17a2b8, #138496); /* Azul */
+    color: white;
+}
+
+.conteo2 {
+    background: linear-gradient(135deg, #ffc107, #d39e00); /* Amarillo */
+    color: white;
+}
+
+.conteo3 {
+    background: linear-gradient(135deg, #28a745, #1e7e34); /* Verde */
+    color: white;
+}
+/* Estilos específicos para cada tarjeta
+.conteo1 { background-color: #17a2b8 !important; } /* Azul 
+.conteo2 { background-color: #ffc107 !important; } /* Amarillo 
+.conteo3 { background-color: #28a745 !important; } /* Verde */
+/*
+
+/* Reducir tamaño del texto */
+.card-header {
+    font-size: 1rem; /* Título más pequeño */
+    font-weight: bold;
+    padding: 5px;
+}
+
+.card-title {
+    font-size: 1.5rem; /* Número más pequeño */
+    font-weight: bold;
+}
+
+/* Opcional: Ajustar íconos */
+.card-header i {
+    font-size: 1rem; /* Ícono más pequeño */
+    margin-right: 5px;
+}
+
+
 
 </style>
 </head>
@@ -202,7 +338,7 @@ $stmt->close();
     </form>
 </div>
 
-      <a href="My_request_Managers.php"class="active"><i class="bi bi-card-list me-2"></i> My Requests</a>
+      
       <button class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
         <i class="bi bi-file-earmark-plus me-2"></i> New Requests
       </button>
@@ -217,9 +353,55 @@ $stmt->close();
 
     <!-- CONTENIDO PRINCIPAL -->
     <div class="main-content">
-      <h4 class="mb-4">Manager Panel</h4>
+    <div class="profile-container">
+    <form action="upload_profile_picture.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="profile_picture" id="profilePictureInput" style="display: none;" onchange="this.form.submit()">
+        <img src="<?= isset($_SESSION['user']['profile_picture']) && !empty($_SESSION['user']['profile_picture']) 
+                     ? htmlspecialchars($_SESSION['user']['profile_picture']) 
+                     : 'uploads/default-avatar.png'; ?>" 
+             alt="User Avatar" class="profile-pic" onclick="triggerFileInput()">
+        <p class="username">
+            <?= isset($_SESSION['user']['username']) ? htmlspecialchars($_SESSION['user']['username']) : 'Unknown User'; ?>
+        </p>
+    </form>
+</div>
+      <h4 class="mb-4">Manager </h4>
       <div class="container mt-4">
-    <h4>Completed Requests</h4>
+      <div class="row">
+    <!-- Tarjeta de Hoy (conteo1) -->
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3 conteo1">
+            <div class="card-header"><i class="bi bi-calendar-day"></i>Made Today</div>
+            <div class="card-body">
+                <h5 class="card-title text-center"><?= $total_today ?></h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjeta de Esta Semana (conteo2) -->
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 conteo2">
+            <div class="card-header"><i class="bi bi-calendar-week"></i> Made This Week</div>
+            <div class="card-body">
+                <h5 class="card-title text-center"><?= $total_week ?></h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjeta de Este Mes (conteo3) -->
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 conteo3">
+            <div class="card-header"><i class="bi bi-calendar-month"></i> Made This Month</div>
+            <div class="card-body">
+                <h5 class="card-title text-center"><?= $total_month ?></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+    <h4><i class="bi bi-check-circle" style="font-size: 24px; color: green;"></i>
+    Completed Requests</h4>
     <table class="table table-striped custom-table">
         <thead>
             <tr>
@@ -238,7 +420,64 @@ $stmt->close();
             </tr>
         </tbody>
     </table>
+
+     <!-- Tabla con todas las solicitudes -->
+     <div class="card card-futuristic">
+        <div class="card-body">
+          <h5 class="card-title mb-3"><i class="bi bi-globe" style="font-size: 24px; color: #000d30;"></i>
+          All bio requests </h5>
+          <div class="table-responsive">
+    <table class="table table-light table-striped align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Candidate</th>
+                <th>Nivel de Prioridad</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody id="tablaSolicitudes">
+            <?php
+            include 'db.php'; // Conexión a la base de datos
+
+            $sql = "SELECT id, candidate_name, nivel_prioridad, estado, fecha_creacion FROM solicitudes";
+            $result = $conn->query($sql);
+
+            if ($result && $result->num_rows > 0): 
+                while ($row = $result->fetch_assoc()) { ?>
+                    <tr>
+                        <td><?= $row['id']; ?></td>
+                        <td><?= $row['solicitante']; ?></td>
+                        <td><?= $row['candidate_name']; ?></td>
+                        <td>
+                            <button class="btn btn-sm 
+                                <?= ($row['nivel_prioridad'] == 'Very high') ? 'btn-danger' : 
+                                    (($row['nivel_prioridad'] == 'High') ? 'btn-warning' : 'btn-success'); ?>">
+                                <?= $row['nivel_prioridad']; ?>
+                            </button>
+                        </td>
+                        <td>
+                            <span class="badge 
+                                <?= ($row['estado'] == 'En proceso') ? 'bg-warning text-dark' : 
+                                    (($row['estado'] == 'Finalizado') ? 'bg-success' : 'bg-danger'); ?>">
+                                <?= $row['estado']; ?>
+                            </span>
+                        </td>
+                        <td><?= date("Y-m-d H:i:s", strtotime($row['fecha_creacion'])); ?></td>
+                    </tr>
+                <?php } 
+            else: ?>
+                <tr><td colspan="6" class="text-center">No records found</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 </div>
+
+        </div>
+      </div>
+</div>
+
   <!-- MODAL PARA NUEVA SOLICITUD -->
   <div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -250,8 +489,7 @@ $stmt->close();
         <div class="modal-body">
           <form id="solicitudForm" enctype="multipart/form-data">
             <div class="mb-3">
-              <label class="form-label">Your Name</label>
-              <input type="text" class="form-control" name="solicitante" required>
+              
             </div>
             <div class="mb-3">
               <label class="form-label">Candidate Name</label>
@@ -297,29 +535,60 @@ $stmt->close();
   </div>
 
   <!-- MODAL PARA VER DETALLES -->
+><!-- MODAL PARA VER DETALLES -->
+<!-- MODAL PARA VER DETALLES -->
 <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Request Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content custom-modal"> <!-- Aplicamos clase personalizada -->
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-card-list"></i> Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-            <table class="table table-bordered">
-    <tr><th>ID:</th><td id="detalle-id"></td></tr>
-    <tr><th>Candidate:</th><td id="detalle-candidato"></td></tr>
-    <tr><th>Department:</th><td id="detalle-departamento"></td></tr>
-    <tr><th>Position:</th><td id="detalle-position"></td></tr>
-    <tr><th>Priority Level:</th><td id="detalle-prioridad"></td></tr>
-    <tr><th>Delivery Time:</th><td id="detalle-fecha"></td></tr>
-    <tr><th>Comments:</th><td id="detalle-comentarios"></td></tr>
-    <tr><th>Response:</th><td id="detalle-respuesta"></td></tr>
-</table>
-
+                <table class="table table-bordered custom-table">
+                    <tr>
+                        <th><i class="bi bi-hash"></i> ID:</th>
+                        <td id="detalle-id"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-person"></i> Candidate:</th>
+                        <td id="detalle-candidato"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-building"></i> Department:</th>
+                        <td id="detalle-departamento"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-briefcase"></i> Position:</th>
+                        <td id="detalle-position"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-exclamation-circle"></i> Priority Level:</th>
+                        <td id="detalle-prioridad"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-calendar"></i> Delivery Time:</th>
+                        <td id="detalle-fecha"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-chat-left-text"></i> Comments:</th>
+                        <td id="detalle-comentarios"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-paperclip"></i> Attachments:</th>
+                        <td id="detalle-attachments"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="bi bi-reply"></i> Response:</th>
+                        <td id="detalle-respuesta"></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
   <script>
@@ -361,12 +630,12 @@ cargarSolicitudes();
     }
 </script>
 <script>
-function verDetalles(id) {
+  function verDetalles(id) {
     fetch('obtener_solicitud.php?id=' + id)
         .then(response => response.json())
         .then(data => {
-            console.log("Received Data:", data); // Debugging: Check the received data
-            
+            console.log("Datos recibidos:", data); // Depuración
+
             if (data.error) {
                 alert("Error: " + data.error);
                 return;
@@ -380,9 +649,24 @@ function verDetalles(id) {
             document.getElementById("detalle-fecha").innerText = data.delivery_time || "N/A";
             document.getElementById("detalle-comentarios").innerText = data.comments || "No comments";
             document.getElementById("detalle-respuesta").innerText = data.response_comments || "No response";
+
+            // Procesar archivos adjuntos
+            let attachmentsHTML = "No attachments";
+            if (data.attachments) {
+                let files = data.attachments.split(",");
+                attachmentsHTML = "";
+                files.forEach(file => {
+                    let fileName = file.split('/').pop(); // Obtener solo el nombre del archivo
+                    attachmentsHTML += `<a href="${file}" target="_blank" class="btn btn-sm btn-primary m-1">
+                                            <i class="bi bi-file-earmark-arrow-down"></i> ${fileName}
+                                        </a><br>`;
+                });
+            }
+            document.getElementById("detalle-attachments").innerHTML = attachmentsHTML;
         })
-        .catch(error => console.error("Error loading request details:", error));
+        .catch(error => console.error("Error al cargar detalles de la solicitud:", error));
 }
+
 </script>
 
 

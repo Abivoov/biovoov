@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user'])) {
-    $user_id = $_SESSION['user']['id'];
+    $user_id = $_SESSION['user_id'];
 
     // Verificar si se subió un archivo
     if (!empty($_FILES['profile_picture']['name'])) {
