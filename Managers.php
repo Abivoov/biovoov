@@ -1,6 +1,7 @@
 <?php
 require 'auth.php';
 require 'db.php'; // Asegura que la conexión a la base de datos esté disponible
+
 checkRole(['Manager']); // Solo los managers pueden ver esta página
 
 
@@ -22,7 +23,17 @@ $_SESSION['user']['username'] = !empty($user_data['username']) ? $user_data['use
 $_SESSION['user']['profile_picture'] = !empty($user_data['profile_picture']) ? $user_data['profile_picture'] : 'uploads/default-avatar.png';
 
 $profile_picture = $_SESSION['user']['profile_picture'];
-// **Conteo de solicitudes hechas hoy**
+// Obtener todas las solicitudes
+$sql = "SELECT id, candidate_name, department, position, nivel_prioridad, estado, fecha_creacion FROM solicitudes WHERE user_id = ? ORDER BY fecha_creacion DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+
+
+// Conteo de solicitudes hechas hoy
 $sql_today = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND DATE(fecha_creacion) = CURDATE()";
 $stmt_today = $conn->prepare($sql_today);
 $stmt_today->bind_param("i", $user_id);
@@ -32,7 +43,7 @@ $row_today = $result_today->fetch_assoc();
 $total_today = $row_today['total'];
 $stmt_today->close();
 
-// **Conteo de solicitudes hechas esta semana**
+// Conteo de solicitudes hechas esta semana
 $sql_week = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND YEARWEEK(fecha_creacion, 1) = YEARWEEK(CURDATE(), 1)";
 $stmt_week = $conn->prepare($sql_week);
 $stmt_week->bind_param("i", $user_id);
@@ -42,7 +53,7 @@ $row_week = $result_week->fetch_assoc();
 $total_week = $row_week['total'];
 $stmt_week->close();
 
-// **Conteo de solicitudes hechas este mes**
+// Conteo de solicitudes hechas este mes
 $sql_month = "SELECT COUNT(*) as total FROM solicitudes WHERE user_id = ? AND MONTH(fecha_creacion) = MONTH(CURDATE()) AND YEAR(fecha_creacion) = YEAR(CURDATE())";
 $stmt_month = $conn->prepare($sql_month);
 $stmt_month->bind_param("i", $user_id);
@@ -51,6 +62,7 @@ $result_month = $stmt_month->get_result();
 $row_month = $result_month->fetch_assoc();
 $total_month = $row_month['total'];
 $stmt_month->close();
+
 
 
 $conn->close();
@@ -92,6 +104,7 @@ $conn->close();
     max-width: 90%;
     margin: auto;
 }
+
 
 /* Estilos personalizados para la tabla */
 .custom-table {
@@ -314,6 +327,50 @@ $conn->close();
     margin-right: 5px;
 }
 
+#tablaSoliGlobal {
+  background-color: #000d30 !important; /* Color de fondo del encabezado */
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+#tablaSoliGlobal thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#tablaSoliGlobal thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+#tablaSoliGlobal tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+#tablaSoliGlobal tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+#tablaSoliGlobal thead {
+    background-color: #000d30 !important; /* Color de fondo del encabezado */
+    color: white !important; /* Color del texto */
+}
+
+#tablaSoliGlobal th, 
+#tablaSoliGlobal td {
+    padding: 12px;
+    text-align: center;
+}
+
+#tablaSoliGlobal tr {
+    background-color: white;
+}
+
+#tablaSoliGlobal tr:nth-child(even) {
+    background-color: #f8f9fa; /* Alternar colores de filas */
+}
+
 
 
 </style>
@@ -421,61 +478,82 @@ $conn->close();
         </tbody>
     </table>
 
-     <!-- Tabla con todas las solicitudes -->
-     <div class="card card-futuristic">
-        <div class="card-body">
-          <h5 class="card-title mb-3"><i class="bi bi-globe" style="font-size: 24px; color: #000d30;"></i>
-          All bio requests </h5>
-          <div class="table-responsive">
-    <table class="table table-light table-striped align-middle">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Candidate</th>
-                <th>Nivel de Prioridad</th>
-                <th>Estado</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody id="tablaSolicitudes">
-            <?php
-            include 'db.php'; // Conexión a la base de datos
-
-            $sql = "SELECT id, candidate_name, nivel_prioridad, estado, fecha_creacion FROM solicitudes";
-            $result = $conn->query($sql);
-
-            if ($result && $result->num_rows > 0): 
-                while ($row = $result->fetch_assoc()) { ?>
+   <!-- Tabla con todas las solicitudes -->
+<div class="card shadow-lg border-0 rounded-4">
+    
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table id="tablaSoliGlobal" class="table table-hover align-middle text-center">
+                <thead>
                     <tr>
-                        <td><?= $row['id']; ?></td>
-                        <td><?= $row['solicitante']; ?></td>
-                        <td><?= $row['candidate_name']; ?></td>
+                        <th>ID</th>
+                        <th>Candidato</th>
+                        <th>Departamento</th>
+                        <th>Posición</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr class="bg-light">
+                        <td class="fw-bold"><?= $row['id'] ?></td>
+                        <td><?= htmlspecialchars($row['candidate_name']) ?></td>
+                        <td><?= isset($row['department']) ? htmlspecialchars($row['department']) : 'N/A' ?></td>
+                        <td><?= isset($row['position']) ? htmlspecialchars($row['position']) : 'N/A' ?></td>
                         <td>
-                            <button class="btn btn-sm 
-                                <?= ($row['nivel_prioridad'] == 'Very high') ? 'btn-danger' : 
-                                    (($row['nivel_prioridad'] == 'High') ? 'btn-warning' : 'btn-success'); ?>">
-                                <?= $row['nivel_prioridad']; ?>
-                            </button>
+                            <span class="badge 
+                                <?= ($row['nivel_prioridad'] == 'Very high') ? 'bg-danger' : 
+                                    (($row['nivel_prioridad'] == 'High') ? 'bg-warning' : 'bg-success'); ?>">
+                                <?= htmlspecialchars($row['nivel_prioridad']) ?>
+                            </span>
                         </td>
                         <td>
                             <span class="badge 
-                                <?= ($row['estado'] == 'En proceso') ? 'bg-warning text-dark' : 
-                                    (($row['estado'] == 'Finalizado') ? 'bg-success' : 'bg-danger'); ?>">
-                                <?= $row['estado']; ?>
+                                <?= ($row['estado'] == 'Pendiente') ? 'bg-warning text-dark' : 
+                                    (($row['estado'] == 'En proceso') ? 'bg-primary' : 'bg-success'); ?>">
+                                <?= htmlspecialchars($row['estado']) ?>
                             </span>
                         </td>
-                        <td><?= date("Y-m-d H:i:s", strtotime($row['fecha_creacion'])); ?></td>
+                        <td><?= date("Y-m-d H:i", strtotime($row['fecha_creacion'])) ?></td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#modalResponder<?= $row['id'] ?>">
+                                <i class="bi bi-eye"></i> Ver Detalles
+                            </button>
+                        </td>
                     </tr>
-                <?php } 
-            else: ?>
-                <tr><td colspan="6" class="text-center">No records found</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
 
+                    <!-- Modal para ver detalles -->
+                    <div class="modal fade" id="modalResponder<?= $row['id'] ?>" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header text-white" style="background-color: #000d30;">
+                                    <h5 class="modal-title"><i class="bi bi-card-list"></i> Detalles de Solicitud #<?= $row['id'] ?></h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body bg-light p-4">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>Candidato:</strong> <?= htmlspecialchars($row['candidate_name']) ?></li>
+                                        <li class="list-group-item"><strong>Departamento:</strong> <?= htmlspecialchars($row['department']) ?></li>
+                                        <li class="list-group-item"><strong>Posición:</strong> <?= htmlspecialchars($row['position']) ?></li>
+                                        <li class="list-group-item"><strong>Prioridad:</strong> <?= htmlspecialchars($row['nivel_prioridad']) ?></li>
+                                        <li class="list-group-item"><strong>Estado:</strong> <?= htmlspecialchars($row['estado']) ?></li>
+                                        <li class="list-group-item"><strong>Fecha de Creación:</strong> <?= date("Y-m-d H:i", strtotime($row['fecha_creacion'])) ?></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
         </div>
-      </div>
+    </div>
+</div>
+ 
 </div>
 
   <!-- MODAL PARA NUEVA SOLICITUD -->
@@ -535,7 +613,7 @@ $conn->close();
   </div>
 
   <!-- MODAL PARA VER DETALLES -->
-><!-- MODAL PARA VER DETALLES -->
+<!-- MODAL PARA VER DETALLES -->
 <!-- MODAL PARA VER DETALLES -->
 <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

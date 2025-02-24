@@ -1,2 +1,7 @@
 Options -Indexes
 DirectoryIndex index.php
+
+# Asegurar que los archivos PHP sean accesibles
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch>
