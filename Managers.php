@@ -75,7 +75,7 @@ $conn->close();
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Manager Panel - Dashboard Futurista</title>
+  <title>BIO-Manager Panel </title>
 
   <!-- Bootstrap 5 -->
   <link 
@@ -327,49 +327,8 @@ $conn->close();
     margin-right: 5px;
 }
 
-#tablaSoliGlobal {
-  background-color: #000d30 !important; /* Color de fondo del encabezado */
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
-}
 
-#tablaSoliGlobal thead tr:first-child th:first-child {
-    border-top-left-radius: 12px;
-}
 
-#tablaSoliGlobal thead tr:first-child th:last-child {
-    border-top-right-radius: 12px;
-}
-
-#tablaSoliGlobal tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-}
-
-#tablaSoliGlobal tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
-}
-
-#tablaSoliGlobal thead {
-    background-color: #000d30 !important; /* Color de fondo del encabezado */
-    color: white !important; /* Color del texto */
-}
-
-#tablaSoliGlobal th, 
-#tablaSoliGlobal td {
-    padding: 12px;
-    text-align: center;
-}
-
-#tablaSoliGlobal tr {
-    background-color: white;
-}
-
-#tablaSoliGlobal tr:nth-child(even) {
-    background-color: #f8f9fa; /* Alternar colores de filas */
-}
 
 
 
@@ -457,8 +416,8 @@ $conn->close();
 </div>
 
         
-    <h4><i class="bi bi-check-circle" style="font-size: 24px; color: green;"></i>
-    Completed Requests</h4>
+    <h5><i class="bi bi-check-circle" style="font-size: 24px; color: green;"></i>
+    Completed Requests</h5>
     <table class="table table-striped custom-table">
         <thead>
             <tr>
@@ -481,19 +440,20 @@ $conn->close();
    <!-- Tabla con todas las solicitudes -->
 <div class="card shadow-lg border-0 rounded-4">
     
-    <div class="card-body p-4">
-        <div class="table-responsive">
+    <div class="card-body1 p-4">
+        <h5>All applications sent</h5>
+        <div class="table-responsive" style="background-color:rgb(195, 196, 197); border-radius: 12px;">
             <table id="tablaSoliGlobal" class="table table-hover align-middle text-center">
-                <thead>
+                <thead >
                     <tr>
                         <th>ID</th>
-                        <th>Candidato</th>
-                        <th>Departamento</th>
-                        <th>Posición</th>
-                        <th>Prioridad</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
+                        <th>Candidate</th>
+                        <th>Departament</th>
+                        <th>Position</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -576,9 +536,9 @@ $conn->close();
             <div class="mb-3">
               <label class="form-label">Application Department</label>
               <select class="form-select" name="department">
-                <option value="HR">ISA</option>
-                <option value="IT">MKTG</option>
-                <option value="Finance">VA</option>
+                <option value="ISA">ISA</option>
+                <option value="MKTG">MKTG</option>
+                <option value="VA">VA</option>
               </select>
             </div>
             <div class="mb-3">
@@ -590,7 +550,7 @@ $conn->close();
               <input type="datetime-local" class="form-control" name="delivery_time" required>
             </div>
             <div class="mb-3">
-              <label class="form-label">Nivel de Prioridad</label>
+              <label class="form-label">Priority Level/label>
               <select class="form-select" name="nivel_prioridad">
                 <option value="Normal" selected>Normal</option>
                 <option value="High">High</option>

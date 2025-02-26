@@ -357,7 +357,7 @@ $conn->close();
       <div class="logo"><img class="logoimg" src="img/Logo.png" alt=""></div>
     
       <div class="profile-container">
-    <form action="upload_profile_picture.php" method="POST" enctype="multipart/form-data">
+      <form action="upload_profile_picture.php" method="POST" enctype="multipart/form-data">
         <input type="file" name="profile_picture" id="profilePictureInput" style="display: none;" onchange="this.form.submit()">
         <img src="<?= isset($_SESSION['user']['profile_picture']) && !empty($_SESSION['user']['profile_picture']) 
                      ? htmlspecialchars($_SESSION['user']['profile_picture']) 
@@ -438,12 +438,11 @@ $conn->close();
     
 
         
-    <h4><i class="bi bi-check-circle" style="font-size: 24px; color: green;"></i>
-    Completed Requests</h4>
+   
    <!-- Tabla de Solicitudes Completadas -->
    <div class="card shadow-lg border-0 rounded-4 mt-4">
     <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="bi bi-check-circle"></i> Solicitudes Completadas</h5>
+        <h5 class="mb-0"><i class="bi bi-check-circle"></i> Completed Requests</h5>
     </div>
     <div class="card-body p-4">
         <div class="table-responsive">
