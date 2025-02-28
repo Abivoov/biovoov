@@ -383,6 +383,7 @@ $conn->close();
 </div>
       <h4 class="mb-4">Manager </h4>
       <div class="container mt-4">
+      <div>
       <div class="row">
     <!-- Tarjeta de Hoy (conteo1) -->
     <div class="col-md-4">

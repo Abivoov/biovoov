@@ -3,9 +3,32 @@ require 'auth.php';
 require 'db.php';
 checkRole(['Admin']); // Solo Admin puede acceder
 
-$sql = "SELECT * FROM solicitudes ORDER BY fecha_creacion DESC";
-$result = $conn->query($sql);
+$searchQuery = isset($_GET['query']) ? trim($_GET['query']) : '';
 
+// Consulta SQL con JOIN para incluir el username del usuario que creó la solicitud
+$sql = "SELECT solicitudes.*, usuarios.username 
+        FROM solicitudes
+        JOIN usuarios ON solicitudes.user_id = usuarios.id";
+
+// Si hay un término de búsqueda, lo agregamos a la consulta
+if (!empty($searchQuery)) {
+    $sql .= " WHERE solicitudes.candidate_name LIKE ? 
+              OR usuarios.username LIKE ?";
+}
+
+$sql .= " ORDER BY solicitudes.fecha_creacion DESC";
+
+$stmt = $conn->prepare($sql);
+
+if (!empty($searchQuery)) {
+    $searchParam = "%$searchQuery%";
+    $stmt->bind_param("ss", $searchParam, $searchParam);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Construcción de la tabla con los resultados filtrados
 while ($row = $result->fetch_assoc()): ?>
     <tr>
         <td><?= $row['id'] ?></td>
@@ -13,6 +36,7 @@ while ($row = $result->fetch_assoc()): ?>
         <td><?= htmlspecialchars($row['department']) ?></td>
         <td><?= htmlspecialchars($row['position']) ?></td>
         <td><?= htmlspecialchars($row['nivel_prioridad']) ?></td>
+        <td><?= htmlspecialchars($row['username']) ?></td> <!-- Nueva columna para el usuario -->
         <td>
             <form action="actualizar_estado.php" method="POST">
                 <input type="hidden" name="id" value="<?= $row['id'] ?>">
@@ -28,4 +52,7 @@ while ($row = $result->fetch_assoc()): ?>
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalResponder<?= $row['id'] ?>">Responder</button>
         </td>
     </tr>
-<?php endwhile; ?>
+<?php endwhile;
+
+$conn->close();
+?>

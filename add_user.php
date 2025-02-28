@@ -2,8 +2,8 @@
 include 'db.php'; // Asegúrate de que este archivo tiene la conexión a la base de datos
 
 // Define los datos del usuario a registrar
-$email = "voovhr@voov.io";
-$password = "HR2025**";
+$email = "cruzabisag@gmail.com";
+$password = "admin2025**";
 $rol = "Manager";
 
 // Hashear la contraseña antes de almacenarla
