@@ -94,7 +94,7 @@ $conn->close();
     body {
       margin: 0;
       padding: 0;
-      background: #ffffff;
+      background:rgb(240, 240, 240);
       color: #000d30;
       min-height: 100vh;
       display: flex;
@@ -226,23 +226,8 @@ $conn->close();
   margin-bottom: 10px;
   text-align: center;
 }
-/* Estilos para el modal */
-.custom-modal {
-    border-radius: 15px; /* Bordes redondeados */
-    overflow: hidden; /* Para que las esquinas redondeadas sean efectivas */
-    background:rgb(241, 242, 244); /* Color de fondo oscuro */
-    color: #ffffff; /* Texto en blanco */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Sombra elegante */
-}
 
-/* Encabezado del modal */
-.custom-modal .modal-header {
-  background: #000d30;
-    color: white;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    padding: 12px 16px;
-}
+
 
 /* Botón de cierre */
 .custom-modal .btn-close {
@@ -250,12 +235,30 @@ $conn->close();
 }
 
 /* Cuerpo del modal */
+.custom-modal {
+    border-radius: 15px;
+    overflow: hidden;
+    background: #f1f2f4;
+    color: #000d30;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.custom-modal .modal-header {
+    background: #000d30;
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 12px 16px;
+}
+
 .custom-modal .modal-body {
     padding: 20px;
-    background:rgb(240, 241, 245);
+    background: rgb(240, 241, 245);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
+
+
 
 /* Estilos para la tabla dentro del modal */
 .custom-table {
@@ -279,7 +282,7 @@ $conn->close();
 
 /* Estilos generales para las tarjetas */
 .conteo1, .conteo2, .conteo3 {
-    background-color: #17a2b8; /* Color de fondo */
+    
     border-radius: 8px; /* Bordes más pequeños */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px; /* Menos espacio interno */
@@ -288,26 +291,10 @@ $conn->close();
     text-align: center;
     margin: auto;
 }
-/* Colores personalizados para cada tarjeta */
-.conteo1 {
-    background: linear-gradient(135deg, #17a2b8, #138496); /* Azul */
-    color: white;
-}
 
-.conteo2 {
-    background: linear-gradient(135deg, #ffc107, #d39e00); /* Amarillo */
-    color: white;
-}
 
-.conteo3 {
-    background: linear-gradient(135deg, #28a745, #1e7e34); /* Verde */
-    color: white;
-}
-/* Estilos específicos para cada tarjeta
-.conteo1 { background-color: #17a2b8 !important; } /* Azul 
-.conteo2 { background-color: #ffc107 !important; } /* Amarillo 
-.conteo3 { background-color: #28a745 !important; } /* Verde */
-/*
+
+
 
 /* Reducir tamaño del texto */
 .card-header {
@@ -325,6 +312,53 @@ $conn->close();
 .card-header i {
     font-size: 1rem; /* Ícono más pequeño */
     margin-right: 5px;
+}
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    gap: 10px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 45px; /* Espaciado para el icono */
+    border: 2px solid #000d30;
+    border-radius: 30px;
+    outline: none;
+    background-color: #f8f9fa;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    border-color: #1ac6ff;
+    box-shadow: 0 0 10px rgba(26, 198, 255, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    font-size: 18px;
+    color: #000d30;
+}
+
+.search-btn {
+    border-radius: 30px;
+    padding: 10px 20px;
+    background-color: #000d30;
+    color: white;
+    border: 2px solid #000d30;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-btn:hover {
+    background-color: white;
+    color: #000d30;
+    border: 2px solid #000d30;
+    transform: scale(1.05);
 }
 
 
@@ -355,11 +389,11 @@ $conn->close();
 </div>
 
       
-      <button class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#solicitudModal">
+      <button class="btn  w-100 mt-2" data-bs-toggle="modal"  style="color:rgb(235, 233, 233); padding-right: 90px;" data-bs-target="#solicitudModal">
         <i class="bi bi-file-earmark-plus me-2"></i> New Requests
       </button>
       <hr />
-      <a href="Feedback.php">
+      <a href="foro.php">
     <i class="bi bi-chat-left-text me-2"></i> Feedback
 </a>
 <hr />
@@ -381,13 +415,80 @@ $conn->close();
         </p>
     </form>
 </div>
+    
       <h4 class="mb-4">Manager </h4>
+      <!-- Campo de Búsqueda -->
+       <!-- Campo de Búsqueda con diseño mejorado -->
+       <div class="search-container">
+    
+    <input type="text" id="searchQuery" class="search-input" placeholder="Buscar por nombre de candidato">
+    <button id="btnBuscar" class="search-btn" data-bs-toggle="modal" data-bs-target="#searchModal">Buscar</button>
+</div>
+
+<!-- Modal de búsqueda -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Resultados de la Búsqueda</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Candidate</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchResults">
+                        <tr>
+                            <td colspan="7" class="text-center">Ingrese un término de búsqueda...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para ver detalles de la solicitud -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-card-list"></i> Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr><th>ID:</th><td id="detalle-id"></td></tr>
+                    <tr><th>Candidate:</th><td id="detalle-candidato"></td></tr>
+                    <tr><th>Department:</th><td id="detalle-departamento"></td></tr>
+                    <tr><th>Position:</th><td id="detalle-position"></td></tr>
+                    <tr><th>Priority:</th><td id="detalle-prioridad"></td></tr>
+                    <tr><th>Status:</th><td id="detalle-status"></td></tr>
+                    <tr><th>Created:</th><td id="detalle-fecha"></td></tr>
+                    <tr><th>Comments:</th><td id="detalle-comentarios"></td></tr>
+                    <tr><th>Attachments:</th><td id="detalle-attachments"></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
       <div class="container mt-4">
       <div>
       <div class="row">
     <!-- Tarjeta de Hoy (conteo1) -->
     <div class="col-md-4">
-        <div class="card text-white bg-info mb-3 conteo1">
+        <div class="card text-dark bg-light mb-3 conteo1">
             <div class="card-header"><i class="bi bi-calendar-day"></i>Made Today</div>
             <div class="card-body">
                 <h5 class="card-title text-center"><?= $total_today ?></h5>
@@ -397,7 +498,7 @@ $conn->close();
 
     <!-- Tarjeta de Esta Semana (conteo2) -->
     <div class="col-md-4">
-        <div class="card text-white bg-warning mb-3 conteo2">
+        <div class="card text-dark bg-light mb-3 conteo2">
             <div class="card-header"><i class="bi bi-calendar-week"></i> Made This Week</div>
             <div class="card-body">
                 <h5 class="card-title text-center"><?= $total_week ?></h5>
@@ -407,7 +508,7 @@ $conn->close();
 
     <!-- Tarjeta de Este Mes (conteo3) -->
     <div class="col-md-4">
-        <div class="card text-white bg-success mb-3 conteo3">
+        <div class="card text-dark bg-light mb-3 conteo3">
             <div class="card-header"><i class="bi bi-calendar-month"></i> Made This Month</div>
             <div class="card-body">
                 <h5 class="card-title text-center"><?= $total_month ?></h5>
@@ -518,60 +619,61 @@ $conn->close();
 </div>
 
   <!-- MODAL PARA NUEVA SOLICITUD -->
-  <div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
+  <!-- MODAL PARA NUEVA SOLICITUD -->
+<!-- MODAL PARA NUEVA SOLICITUD -->
+<div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content bg-dark text-white">
-        <div class="modal-header">
-          <h5 class="modal-title">New Request</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">New Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="solicitudForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Candidate Name</label>
+                        <input type="text" class="form-control" name="candidate_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Application Department</label>
+                        <select class="form-select" name="department">
+                            <option value="ISA">ISA</option>
+                            <option value="MKTG">MKTG</option>
+                            <option value="VA">VA</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Position</label>
+                        <input type="text" class="form-control" name="position" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Estimated Delivery Time</label>
+                        <input type="datetime-local" class="form-control" name="delivery_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Priority Level</label>
+                        <select class="form-select" name="nivel_prioridad">
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                            <option value="Very high">Very High</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Attachments (PDF, DOC, XLSX)</label>
+                        <input type="file" class="form-control" name="attachments[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comments</label>
+                        <textarea class="form-control" name="comments" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Send Request</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <form id="solicitudForm" enctype="multipart/form-data">
-            <div class="mb-3">
-              
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Candidate Name</label>
-              <input type="text" class="form-control" name="candidate_name" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Application Department</label>
-              <select class="form-select" name="department">
-                <option value="ISA">ISA</option>
-                <option value="MKTG">MKTG</option>
-                <option value="VA">VA</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Position</label>
-              <input type="text" class="form-control" name="position" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Estimated Delivery Time</label>
-              <input type="datetime-local" class="form-control" name="delivery_time" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Priority Level/label>
-              <select class="form-select" name="nivel_prioridad">
-                <option value="Normal" selected>Normal</option>
-                <option value="High">High</option>
-                <option value="Very high">Very High</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Attachments (PDF, DOC, XLSX)</label>
-              <input type="file" class="form-control" name="attachments[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Comments</label>
-              <textarea class="form-control" name="comments" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Send</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+
+
 
   <!-- MODAL PARA VER DETALLES -->
 <!-- MODAL PARA VER DETALLES -->
@@ -627,6 +729,19 @@ $conn->close();
     </div>
 </div>
 
+<!-- scrip para buscador -->
+<script>
+document.getElementById("searchQuery").addEventListener("keyup", function() {
+    let searchValue = this.value.trim();
+
+    fetch("buscar_solicitudes_manager.php?query=" + encodeURIComponent(searchValue))
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("searchResults").innerHTML = data;
+        })
+        .catch(error => console.error("Error en la búsqueda:", error));
+});
+</script>
 
 
 
@@ -650,7 +765,7 @@ $conn->close();
 });
 
 function cargarSolicitudes() {
-    fetch('cargar_solicitudes.php')
+    fetch('cargar_solicitudes_finalizadas2.php')
       .then(response => response.text())
       .then(data => {
           document.getElementById("tablaSolicitudes").innerHTML = data;
@@ -711,7 +826,7 @@ cargarSolicitudes();
 
 <script>
 function cargarSolicitudesFinalizadas() {
-    fetch('cargar_solicitudes_finalizadas.php')
+    fetch('cargar_solicitudes_finalizadas2.php')
         .then(response => response.text())
         .then(data => {
             document.getElementById("tablaSolicitudesFinalizadas").innerHTML = data;

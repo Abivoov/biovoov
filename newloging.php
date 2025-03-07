@@ -56,12 +56,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio Management</title>
+    <title>Login - Skill Cloud</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
@@ -69,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.2);
+            background:  rgba(0, 0, 0, 0.2);
         }
         .login-container {
             display: flex;
@@ -83,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             flex: 1;
             background: #000d30;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
@@ -92,9 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .form-section {
             flex: 1;
-            background: rgb(242, 243, 244);
+            background:rgb(242, 243, 244);
             padding: 40px;
-            color: black;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #000d30;
         }
         .btn-login {
-            background: rgb(57, 193, 152);
+            background:rgb(57, 193, 152);
             border: none;
             padding: 10px;
             border-radius: 5px;
@@ -125,32 +125,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .btn-login:hover {
             background: #2a7a66;
         }
-        .logovoov {
+        .logovoov{
             width: 90px;
-            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
+    
         <div class="info-section">
-            <img class="logovoov" src="IMG/Logo.png" alt="">
-            <h2>Welcome to <br>Bio Management</h2>
+            <img class="logovoov"src="IMG/Logo.png" alt="">
+            <h2>Welcome to Bio Management</h2>
         </div>
         <div class="form-section">
-            <h2>Login</h2>
-            <form method="POST" action="">
+            <h2>Loging</h2>
+            <form>
                 <div class="mb-3">
-                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                    <input type="email" class="form-control" placeholder="Email">
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-login">GO</button>
             </form>
-            <?php if ($error): ?>
-                <div class="text-danger mt-3"> <?php echo $error; ?> </div>
-            <?php endif; ?>
         </div>
     </div>
 </body>

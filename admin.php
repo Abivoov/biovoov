@@ -393,7 +393,7 @@ body {
 </div>
 
       
-      <button class="btn btn-light w-100 mt-2" data-bs-toggle="modal" data-bs-target="#RsolicitudModal">
+<button class="btn  w-100 mt-2" data-bs-toggle="modal"  style="color:rgb(235, 233, 233); padding-right: 90px;" data-bs-target="#solicitudModal">
         <i class="bi bi-file-earmark-plus me-2"></i> New Requests
       </button>
       <hr />
@@ -428,6 +428,76 @@ body {
 <button id="btnBuscar" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
     Search
 </button>
+<!-- Modal para nueva solicitud -->
+<div class="modal fade" id="solicitudModal" tabindex="-1" aria-labelledby="solicitudModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">New Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="solicitudForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Candidate Name</label>
+                        <input type="text" class="form-control" name="candidate_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Application Department</label>
+                        <select class="form-select" name="department">
+                            <option value="ISA">ISA</option>
+                            <option value="MKTG">MKTG</option>
+                            <option value="VA">VA</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Position</label>
+                        <input type="text" class="form-control" name="position" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Estimated Delivery Time</label>
+                        <input type="datetime-local" class="form-control" name="delivery_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Priority Level</label>
+                        <select class="form-select" name="nivel_prioridad">
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                            <option value="Very high">Very High</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Attachments (PDF, DOC, XLSX)</label>
+                        <input type="file" class="form-control" name="attachments[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comments</label>
+                        <textarea class="form-control" name="comments" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Send Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal de confirmación de solicitud finalizada y email enviado -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="successModalLabel">Solicitud Finalizada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ✅ La solicitud ha sido finalizada y el usuario ha sido notificado por correo electrónico.
+      </div>
+      <div class="modal-footer">
+        <a href="ver_solicitud.php?id=<?= $id ?>" class="btn btn-primary">🔍 Ver Solicitud</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal con resultados de búsqueda -->
 <div class="modal fade" id="modalBusqueda" tabindex="-1">
@@ -453,23 +523,24 @@ body {
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #000d30; color: white;">
-                <h5 class="modal-title" id="searchModalLabel">Buscar Solicitud</h5>
+                <h5 class="modal-title" id="searchModalLabel">Search Request</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="searchQuery" class="form-control mb-3" placeholder="Buscar por candidato o usuario...">
+                
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
-                                <th>Candidato</th>
-                                <th>Departamento</th>
-                                <th>Posición</th>
-                                <th>Prioridad</th>
-                                <th>Usuario</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
+                                <th>Candidate</th>
+                                <th>Department</th>
+                                <th>Position</th>
+                                <th>Level of Priority</th>
+                                <th>Send By</th>
+                                <th>Stage</th>
+                                <th>Date of Creation</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="searchResults">
@@ -553,7 +624,7 @@ body {
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaSolicitudesFinalizadas" >
                     <?php while ($row = $result_completed->fetch_assoc()): ?>
                     <tr class="bg-light">
                         <td class="fw-bold"><?= $row['id'] ?></td>
@@ -622,7 +693,7 @@ body {
 
 
                     <?php endwhile; ?>
-                </tbody>
+                </>
             </table>
         </div>
     </div>
@@ -646,7 +717,6 @@ body {
                         <th>Priority</th>
                         <th>Stage</th>
                         <th>End Date</th>
-                        
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -688,7 +758,7 @@ body {
         <div class="modal-content rounded-3"> <!-- Bordes redondeados -->
             <div class="modal-header text-white" style="background-color: #000d30;"> <!-- Color azul de Bootstrap -->
                 <h5 class="modal-title">
-                    <i class="bi bi-chat-dots"></i> Responder Solicitud #<?= $row['id'] ?>
+                    <i class="bi bi-chat-dots">Reply</i>  #<?= $row['id'] ?>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -698,7 +768,7 @@ body {
 
                     <!-- Estado de la solicitud -->
                     <div class="mb-3">
-                        <label class="form-label"><i class="bi bi-flag"></i> <strong>Actualizar Estado</strong></label>
+                        <label class="form-label"><i class="bi bi-flag"></i> <strong>Update Stage</strong></label>
                         <select class="form-select" name="estado">
                             <option value="Pendiente" <?= ($row['estado'] == 'Pendiente') ? 'selected' : '' ?>>
                                 ⏳ Pending
@@ -714,19 +784,19 @@ body {
                     
                     <!-- Comentarios de Respuesta -->
                     <div class="mb-3">
-                        <label class="form-label"><i class="bi bi-pencil-square"></i> <strong>Comentarios de Respuesta</strong></label>
-                        <textarea class="form-control" name="response_comments" rows="4" placeholder="Escribe la respuesta..." required></textarea>
+                        <label class="form-label"><i class="bi bi-pencil-square"></i> <strong>Response comments</strong></label>
+                        <textarea class="form-control" name="response_comments" rows="4" placeholder="Write comments about this request..." required></textarea>
                     </div>
 
                     <!-- Adjuntar Archivo -->
                     <div class="mb-3">
-                        <label class="form-label"><i class="bi bi-paperclip"></i> <strong>Adjuntar Archivo (PDF)</strong></label>
-                        <input type="file" class="form-control" name="response_attachment" accept=".pdf" required>
+                        <label class="form-label"><i class="bi bi-paperclip"></i> <strong>Attach Files</strong></label>
+                        <input type="file" class="form-control" name="response_attachment" accept=".pdf" required data-text="No file selected" required>
                     </div>
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">
-                            <i class="bi bi-send"></i> Enviar Respuesta
+                            <i class="bi bi-send"></i> Send
                         </button>
                     </div>
                 </form>
@@ -741,8 +811,43 @@ body {
         </tbody>
     </table>
 </div>
-<!-- BOTÓN PARA ABRIR EL MODAL -->
+<!-- Modal para ver detalles de la solicitud -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content custom-modal">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-card-list"></i> Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr><th>ID:</th><td id="detalle-id"></td></tr>
+                    <tr><th>Candidate:</th><td id="detalle-candidato"></td></tr>
+                    <tr><th>Department:</th><td id="detalle-departamento"></td></tr>
+                    <tr><th>Position:</th><td id="detalle-position"></td></tr>
+                    <tr><th>Priority:</th><td id="detalle-prioridad"></td></tr>
+                    <tr><th>Status:</th><td id="detalle-status"></td></tr>
+                    <tr><th>Created:</th><td id="detalle-fecha"></td></tr>
+                    <tr><th>Comments:</th><td id="detalle-comentarios"></td></tr>
+                    <tr><th>Attachments:</th><td id="detalle-attachments"></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- despliega modal de comfirmacion de finalizacion de solicitud y notificacion via email a usuario-->
+
+<script>
+    $(document).ready(function() {
+    // Comprobar si la URL tiene un parámetro de éxito
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        $('#successModal').modal('show'); // Mostrar el modal automáticamente
+    }
+});
+
+</script>
 
 <!-- cierra modal de busqueda -->
 <script>
@@ -765,7 +870,37 @@ body {
 }
 
 </script>
+<script>
+    document.getElementById("solicitudForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    let formData = new FormData(this);
+    
+    fetch('procesar_solicitud.php', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text())
+      .then(data => {
+          alert(data);
+          var solicitudModal = bootstrap.Modal.getInstance(document.getElementById("solicitudModal"));
+          solicitudModal.hide();
+          document.getElementById("solicitudForm").reset();
+          cargarSolicitudes(); // 🔹 Recargar la tabla automáticamente
+      }).catch(error => console.error("Error:", error));
+});
 
+function cargarSolicitudes() {
+    fetch('cargar_solicitudes.php')
+      .then(response => response.text())
+      .then(data => {
+          document.getElementById("tablaSolicitudes").innerHTML = data;
+      });
+}
+
+cargarSolicitudes();
+
+
+  </script>
 <!-- permite accion para cambiar foto de perfil -->
 <script>
     function triggerFileInput() {
